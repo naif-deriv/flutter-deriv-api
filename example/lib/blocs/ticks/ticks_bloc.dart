@@ -22,27 +22,24 @@ class TicksBloc extends Bloc<TicksEvent, TicksState> {
         add(SubscribeTicks(activeSymbolsState.selectedSymbol));
       }
     });
-  }
 
-  @override
-  Stream<TicksState> mapEventToState(
-    TicksEvent event,
-  ) async* {
-    if (event is SubscribeTicks) {
-      yield TicksLoading();
+    on<TicksEvent>((TicksEvent event, Emitter<TicksState> emit) async {
+      if (event is SubscribeTicks) {
+        emit(TicksLoading());
 
-      await _unsubscribeTick();
+        await _unsubscribeTick();
 
-      _subscribeTick(event.selectedSymbol!)
-          .handleError((dynamic error) => error is TickException
-              ? add(YieldError(error.message))
-              : add(YieldError(error.toString())))
-          .listen((TicksResponse? tick) => add(YieldTick(tick)));
-    } else if (event is YieldTick) {
-      yield TicksLoaded(event.tick?.tick);
-    } else if (event is YieldError) {
-      yield TicksError(event.message);
-    }
+        _subscribeTick(event.selectedSymbol!)
+            .handleError((dynamic error) => error is TickException
+                ? add(YieldError(error.message))
+                : add(YieldError(error.toString())))
+            .listen((TicksResponse? tick) => add(YieldTick(tick)));
+      } else if (event is YieldTick) {
+        emit(TicksLoaded(event.tick?.tick));
+      } else if (event is YieldError) {
+        emit(TicksError(event.message));
+      }
+    });
   }
 
   Stream<TicksResponse?> _subscribeTick(ActiveSymbolsItem selectedSymbol) =>

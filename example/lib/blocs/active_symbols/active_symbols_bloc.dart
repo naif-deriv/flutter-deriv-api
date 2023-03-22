@@ -11,32 +11,32 @@ part 'active_symbols_state.dart';
 /// ActiveSymbolsBloc
 class ActiveSymbolsBloc extends Bloc<ActiveSymbolsEvent, ActiveSymbolsState> {
   /// ActiveSymbolsBloc initializer
-  ActiveSymbolsBloc() : super(ActiveSymbolsLoading());
+  ActiveSymbolsBloc() : super(ActiveSymbolsLoading()) {
+    on<ActiveSymbolsEvent>(
+        (ActiveSymbolsEvent event, Emitter<ActiveSymbolsState> emit) async {
+      if (event is FetchActiveSymbols) {
+        emit(ActiveSymbolsLoading());
 
-  @override
-  Stream<ActiveSymbolsState> mapEventToState(ActiveSymbolsEvent event) async* {
-    if (event is FetchActiveSymbols) {
-      yield ActiveSymbolsLoading();
+        try {
+          final ActiveSymbolsResponse symbols = await _fetchActiveSymbols();
+          emit(ActiveSymbolsLoaded(activeSymbols: symbols.activeSymbols!));
+        } on ActiveSymbolsException catch (error) {
+          emit(ActiveSymbolsError(error.message));
+        }
+      } else if (event is SelectActiveSymbol) {
+        if (state is ActiveSymbolsLoaded) {
+          final ActiveSymbolsLoaded loadedState = state as ActiveSymbolsLoaded;
 
-      try {
-        final ActiveSymbolsResponse symbols = await _fetchActiveSymbols();
-        yield ActiveSymbolsLoaded(activeSymbols: symbols.activeSymbols!);
-      } on ActiveSymbolsException catch (error) {
-        yield ActiveSymbolsError(error.message);
+          emit(ActiveSymbolsLoaded(
+            activeSymbols: loadedState.activeSymbols,
+            selectedSymbol: loadedState.activeSymbols[event.index],
+          ));
+        } else {
+          emit(ActiveSymbolsLoading());
+          add(FetchActiveSymbols());
+        }
       }
-    } else if (event is SelectActiveSymbol) {
-      if (state is ActiveSymbolsLoaded) {
-        final ActiveSymbolsLoaded loadedState = state as ActiveSymbolsLoaded;
-
-        yield ActiveSymbolsLoaded(
-          activeSymbols: loadedState.activeSymbols,
-          selectedSymbol: loadedState.activeSymbols[event.index],
-        );
-      } else {
-        yield ActiveSymbolsLoading();
-        add(FetchActiveSymbols());
-      }
-    }
+    });
   }
 
   Future<ActiveSymbolsResponse> _fetchActiveSymbols() async =>
