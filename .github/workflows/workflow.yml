@@ -1,5 +1,5 @@
 name: Flutter Test & Analyze
-on: [commit]
+on: [push]
 
 jobs:
   update_submodules:
