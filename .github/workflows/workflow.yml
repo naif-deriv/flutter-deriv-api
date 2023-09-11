@@ -1,0 +1,36 @@
+name: Flutter Test & Analyze
+on: [commit]
+
+jobs:
+  update_submodules:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Update submodules
+        run: |
+          git submodule init
+          git submodule update --remote
+  Link JSON files for API autobuild:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: ./setup.sh
+  generate_models:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: subosito/flutter-action@v1
+        with:
+          channel: "stable"
+      - run: flutter pub get
+      - run: flutter pub run build_runner build --delete-conflicting-outputs
+  test_and_analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: subosito/flutter-action@v1
+        with:
+          channel: "stable"
+      - run: flutter pub get
+      - run: flutter test
+      - run: flutter analyze
