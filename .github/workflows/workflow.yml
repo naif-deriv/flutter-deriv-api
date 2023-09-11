@@ -2,14 +2,14 @@ name: Flutter Test & Analyze
 on: [push]
 
 jobs:
-  name: clone submodule
-    uses: actions/checkout@v2
+  # name: clone submodule
+  #   uses: actions/checkout@v2
+  update_submodules:
+    runs-on: ubuntu-latest
     with:
       repository: regentmarkets/binary-websocket-api
       ssh-key: ${{ secrets.SSH_KEY }}
       persist-credentials: true
-  update_submodules:
-    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: Update submodules
