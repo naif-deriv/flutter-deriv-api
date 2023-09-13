@@ -8,6 +8,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - with:
+        repository: regentmarkets/binary-websocket-api
+        ssh-key: ${{ secrets.SSH_KEY }}
+        persist-credentials: true
       - name: Update submodules
         run: |
           git submodule init
