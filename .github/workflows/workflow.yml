@@ -11,14 +11,14 @@ jobs:
         uses: actions/checkout@v2
 
       - name: clone submodule
-          uses: actions/checkout@v2
-          with:
+        uses: actions/checkout@v2
+        with:
           repository: regentmarkets/binary-websocket-api
           ssh-key: ${{ secrets.SSH_KEY }}
           persist-credentials: true
 
       - name: checkout submodule
-          run: |
+        run: |
           git submodule init
           git submodule update
 
@@ -48,8 +48,8 @@ jobs:
       #     persist-credentials: true
       #   run: |
       #     git submodule update --init --recursive --remote
-        # env:
-        #   GIT_SSH_COMMAND: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
+      # env:
+      #   GIT_SSH_COMMAND: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
 
   fetch_json_data:
     runs-on: ubuntu-latest
