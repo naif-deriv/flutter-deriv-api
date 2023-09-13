@@ -2,27 +2,27 @@ name: Flutter Test & Analyze
 on: [push]
 
 jobs:
-  update_submodules:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+  # update_submodules:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
 
-      - name: update submodule
-        run: |
-          git submodule init
-          git submodule update
-        # env:
-        #   repository: regentmarkets/binary-websocket-api
-        #   ref: master
-        #   ssh-key: ${{ secrets.SSH_KEY }}
-        #   persist-credentials: true
+  #     - name: update submodule
+  #       run: |
+  #         git submodule init
+  #         git submodule update
+  #       # env:
+  #       #   repository: regentmarkets/binary-websocket-api
+  #       #   ref: master
+  #       #   ssh-key: ${{ secrets.SSH_KEY }}
+  #       #   persist-credentials: true
 
-  fetch_json_data:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - run: ./setup.sh
+  # fetch_json_data:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - run: ./setup.sh
   generate_models:
     runs-on: ubuntu-latest
     steps:
