@@ -13,7 +13,7 @@ jobs:
       - name: checkout submodule
         uses: actions/checkout@v2
         with:
-          repository: regentmarkets/binary-websocket-api
+          repository: regentmarkets/binary-websocket-api@master
           ssh-key: ${{ secrets.SSH_KEY }}
           persist-credentials: true
       - run: |
