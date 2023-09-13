@@ -2,8 +2,6 @@ name: Flutter Test & Analyze
 on: [push]
 
 jobs:
-  # name: clone submodule
-  #   uses: actions/checkout@v2
   update_submodules:
     runs-on: ubuntu-latest
     steps:
@@ -17,37 +15,9 @@ jobs:
           ssh-key: ${{ secrets.SSH_KEY }}
           persist-credentials: true
         run: |
+          curl https://github.com/regentmarkets/binary-websocket-api.git
           git submodule init
           git submodule update
-
-      # - name: Set up SSH for submodule
-      #   with:
-      #     persist-credentials: true
-      #   run: |
-      #     mkdir -p ~/.ssh
-      #     echo "${{ secrets.SUBMODULE_SSH_KEY }}" > ~/.ssh/id_rsa
-      #     chmod 600 ~/.ssh/id_rsa
-      #     eval $(ssh-agent -s)
-      #     ssh-add ~/.ssh/id_rsa
-      #     ssh-keyscan github.com >> ~/.ssh/known_hosts
-      #   env:
-      #     SUBMODULE_SSH_KEY: ${{ secrets.SUBMODULE_SSH_KEY }}
-      # - name: setup CI step
-      #   uses: regentmarkets/github-actions/ci-setup@master
-      #   with:
-      #     read_github_ssh_key: ${{ secrets.READ_GITHUB_SSH_KEY }}
-      # - name: Update submodules
-      #   # with:
-      #   #   read_github_ssh_key: ${{ secrets.READ_GITHUB_SSH_KEY }}
-      #   #   repository: ${{ github.repository }}
-      #   with:
-      #     repository: regentmarkets/binary-websocket-api
-      #     ssh-key: ${{ secrets.SSH_KEY }}
-      #     persist-credentials: true
-      #   run: |
-      #     git submodule update --init --recursive --remote
-      # env:
-      #   GIT_SSH_COMMAND: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
 
   fetch_json_data:
     runs-on: ubuntu-latest
@@ -73,9 +43,3 @@ jobs:
       - run: flutter pub get
       - run: flutter test
       - run: flutter analyze
-  #   ssh-key: ${{ secrets.SSH_KEY }}
-  # run: |
-  #   mkdir -p ~/.ssh
-  #   echo "${{ secrets.SUBMODULE_SSH_KEY }}" > ~/.ssh/id_rsa
-  #   chmod 600 ~/.ssh/id_rsa
-  #   ssh-keyscan github.com >> ~/.ssh/known_hosts
