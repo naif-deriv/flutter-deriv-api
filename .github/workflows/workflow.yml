@@ -9,13 +9,26 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-        with:
-          ssh-key: ${{ secrets.SSH_KEY }}
-          persist-credentials: true
+
+      - name: Set up SSH for submodule
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SUBMODULE_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+        # with:
+        #   ssh-key: ${{ secrets.SSH_KEY }}
+        #   persist-credentials: true
+        env:
+          SUBMODULE_SSH_KEY: ${{ secrets.SUBMODULE_SSH_KEY }}
+
       - name: Update submodules
         run: |
           git submodule init
           git submodule update --remote
+        env:
+          GIT_SSH_COMMAND: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
+
   fetch_json_data:
     runs-on: ubuntu-latest
     steps:
