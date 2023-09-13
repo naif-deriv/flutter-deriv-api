@@ -7,10 +7,11 @@ jobs:
   update_submodules:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+      # - name: Checkout
+      #   uses: actions/checkout@v2
 
       - name: checkout submodule
+        uses: actions/checkout@v2
         with:
           repository: regentmarkets/binary-websocket-api
           ssh-key: ${{ secrets.SSH_KEY }}
