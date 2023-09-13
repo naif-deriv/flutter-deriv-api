@@ -13,7 +13,6 @@ jobs:
       # - name: Set up SSH for submodule
       #   with:
       #     persist-credentials: true
-
       #   run: |
       #     mkdir -p ~/.ssh
       #     echo "${{ secrets.SUBMODULE_SSH_KEY }}" > ~/.ssh/id_rsa
@@ -23,15 +22,14 @@ jobs:
       #     ssh-keyscan github.com >> ~/.ssh/known_hosts
       #   env:
       #     SUBMODULE_SSH_KEY: ${{ secrets.SUBMODULE_SSH_KEY }}
-
       - name: Update submodules
+        run: |
+          git submodule update --init --recursive --remote
         with:
           read_github_ssh_key: ${{ secrets.READ_GITHUB_SSH_KEY }}
           repository: ${{ github.repository }}
-        run: |
-          git submodule update --init --recursive --remote
-        env:
-          GIT_SSH_COMMAND: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
+        # env:
+        #   GIT_SSH_COMMAND: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
 
   fetch_json_data:
     runs-on: ubuntu-latest
