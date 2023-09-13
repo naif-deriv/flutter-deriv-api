@@ -10,22 +10,23 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Set up SSH for submodule
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SUBMODULE_SSH_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan github.com >> ~/.ssh/known_hosts
-        # with:
-        #   ssh-key: ${{ secrets.SSH_KEY }}
-        #   persist-credentials: true
-        env:
-          SUBMODULE_SSH_KEY: ${{ secrets.SUBMODULE_SSH_KEY }}
+      # - name: Set up SSH for submodule
+      #   with:
+      #     persist-credentials: true
+
+      #   run: |
+      #     mkdir -p ~/.ssh
+      #     echo "${{ secrets.SUBMODULE_SSH_KEY }}" > ~/.ssh/id_rsa
+      #     chmod 600 ~/.ssh/id_rsa
+      #     eval $(ssh-agent -s)
+      #     ssh-add ~/.ssh/id_rsa
+      #     ssh-keyscan github.com >> ~/.ssh/known_hosts
+      #   env:
+      #     SUBMODULE_SSH_KEY: ${{ secrets.SUBMODULE_SSH_KEY }}
 
       - name: Update submodules
         run: |
-          git submodule init
-          git submodule update --remote
+          git submodule update --init --recursive --remote
         env:
           GIT_SSH_COMMAND: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
 
@@ -53,3 +54,9 @@ jobs:
       - run: flutter pub get
       - run: flutter test
       - run: flutter analyze
+  #   ssh-key: ${{ secrets.SSH_KEY }}
+  # run: |
+  #   mkdir -p ~/.ssh
+  #   echo "${{ secrets.SUBMODULE_SSH_KEY }}" > ~/.ssh/id_rsa
+  #   chmod 600 ~/.ssh/id_rsa
+  #   ssh-keyscan github.com >> ~/.ssh/known_hosts
