@@ -2,7 +2,7 @@ name: Flutter Test & Analyze
 on: [push]
 
 jobs:
-  Test & Analyze:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Install SSH Client 🔑
